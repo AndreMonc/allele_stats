@@ -19,7 +19,7 @@ than w in panel A and equal to y in panel C" (Table 1 in Racimo et al. 2017). Cu
 - population key file (.txt)
 - genomic windows file (.bed)
 
-**Output**: two csv files with allele stats. 
+**Output**:
 - File 1 (*allele_stats_by_site.csv*) is organized like a VCF file, but only includes sites for which population A is fixed for the reference allele and population C is fixed for the alternate allele. The script adds four additional columns that provide allele counts and frequencies that are necessary for the calculation of the U20, U50, and Q95 statistics (which are window-based). These allele counts and frequencies are pretty interesting on their own and provide specific site information (unlike the window-based statistics in the second file).
 
 - File 2 (*allele_stats_by_window.csv*) is organized by the windows specified in the genomic window file. Each window includes the calculated value for U20, U50, Q95, and the number of informative sites in the window.
