@@ -26,13 +26,19 @@ than w in panel A and equal to y in panel C" (Table 1 in Racimo et al. 2017). Cu
 
 **System requirements**: Currently, this scripts loads the whole VCF file into memory, so you need a lot of memory for large VCF files. During testing, I ran VCF files of up to 25 GB in size, which finished in ~20 minutes using ~155 GB of memory.
 
-**Note**: This script filters out sites with >= 50% missingness in any of the three specified populations to help ensure data quality.
+**Notes**: 
+
+- This script filters out sites with >= 50% missingness in any of the three specified populations to help ensure data quality.
+- To properly use this program it is important to identify the ancestral allele (similar logic to ABBA-BABBA tests). Our best approximation of this ancestral allele is often the allele in a near outgroup. Thus, ideally, your reference genome is a species or population just outside the clades of interest. When this is the case, we can straightforwardly polarize the alleles of population A by fixing them to alternate state "1" and those of population C by fixing them to the ancestral state "0". Sites with the opposite polarization are not as informative since shared alleles between populations B and C may indicate shared ancestry more than adaptive introgression. 
+- Populations A and B are sister. Population C is sister to populations A + B. Reference is outgroup of populations A + B + C.
+
 
 ## Setup
 
 - Check out the example files in this repository
 - Double check that your VCF file has the expected nine intro columns (from 'CHROM' through 
 'FORMAT'). If you are missing the FORMAT column, add it so that the column indexing is not thrown off.
+- Filter VCF to include only biallelic SNPs. Missing data is ok (see note above).
 - Use command `grep -n "#CHROM" filename.vcf` to identify the line number of the VCF file 
 header line. Subtract one and use that value for the `--skipRows` flag (see usage below).
 - Create a tab-delimited population file (.txt) with two columns: 1) Population and 2) Individual. This file serves to map your individuals to the three populations under consideration. Values in the Population column should be formatted with a single word followed by an underscore and number (e.g., blueRobin_1). The word (=the population name) serves to group populations and the number keeps track of the individuals in that population. Also, use the word to identify populations when running the program (e.g., `--popA blueRobin`)
