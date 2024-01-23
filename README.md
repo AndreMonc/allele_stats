@@ -3,7 +3,7 @@
 
 ## Overview 
 
-**Goal**: To calculate various allele frequency statistics described in Racimo et al. 2017 (Mol. Biol. Evol.). These stats include U20, U50, and Q95, which are all window-based statistics used to detect candidate sites of adaptive introgression across the genome.
+**Goal**: To calculate various allele frequency statistics described in [(Racimo et al. 2017)](https://doi.org/10.1093/molbev/msw216). These stats include U20, U50, and Q95, which are all window-based statistics used to detect candidate sites of adaptive introgression across the genome.
 
 **Statistic definitions**: 
 
