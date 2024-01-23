@@ -7,51 +7,7 @@ Racimo et al. 2017 (Mol. Biol. Evol.). These stats include U20,
 U50, and Q95, which are all used to detect candidate sites of adaptive 
 introgression.
 ________________________________________________________________________________
-Input: VCF file (with the expected nine intro columns from 'CHROM' through 
-'FORMAT'), population file, genomic windows file
-________________________________________________________________________________
-Setup:
-Use grep -n "#CHROM" filename.vcf to identify the line number of the VCF file 
-header line. Subtract one and use that value for the --skipRows flag.
 
-Create bed file with desired genomic windows (use -s flag if you want sliding 
-windows):
-*create genome file with structure <chromName><TAB><chromSize>. I show how to
-create this file from the reference genome fasta index file (fasta.fai).
-
-awk -v OFS='\t' {'print $1,$2'} genome.fasta.fai > genome_file.txt
-awk -v OFS='\t' {'print $1,$2'} xipho_ref.fasta.fai > genome_file.txt
-
-From the fasta index file for the reference genome, 
-*create windows bed file
-*input windows to program
-bedtools makewindows -g genome_file.txt -w 2000000 -s 1900000 > windows.bed
-bedtools makewindows -g genome_file.txt -w 2000000 > windows_test.bed
-
-________________________________________________________________________________
-Output: A text file with VCF data for "qualifying sites" (those sites that meet 
-the conditions necessary to calculate U20, U50, and Q95 stats) and new columns 
-with allele count and frequency data for the target population at each site.
-________________________________________________________________________________
-Note: This script filters out sites with >= 50% missingness PER POPULATION to 
-help ensure data quality.
-________________________________________________________________________________
-Formally, in Racimo et al. 2017:
-***U STATS***
-"U_A_B_C(w,x,y): Number of sites in which any allele is at a frequency lower 
-than w in panel A, higher than x in panel B and equal to y in panel C." In this 
-script, we use w=1% and y=100%.
-***Q95 STAT***
-"Q95_A_B_C(w,y): 95% quantile of the distribution of derived allele frequencies 
-in panel B, for sites where the derived allele is at a frequency lower 
-than w in panel A and equal to y in panel C." In this script, we use w=1% and 
-y=100%.
-________________________________________________________________________________
-System requirements:
-Currently, this scripts loads the whole VCF file into memory, so you need a lot 
-of memory for large VCF files. I ran this program with a 25 GB VCF file on the 
-Louisiana State University cluster in about 20 minutes using ~155 GB of memory. 
-________________________________________________________________________________
 Command to run on LSU cluster:
 
 #!/bin/bash
@@ -73,10 +29,6 @@ Copyright 2024 Andre E. Moncrieff. All rights reserved.
 """
 
 import argparse
-#from ast import AsyncFunctionDef
-#from curses.ascii import alt
-#from logging import setLogRecordFactory
-#from turtle import up, update
 import pandas
 from collections import Counter
 import numpy
