@@ -24,7 +24,15 @@ than w in panel A and equal to y in panel C" (Table 1 in Racimo et al. 2017). Cu
 
 - File 2 (*allele_stats_by_window.csv*) is organized by the windows specified in the genomic window file. Each window includes the calculated value for U20, U50, Q95, and the number of informative sites in the window.
 
-**System requirements**: Currently, this scripts loads the whole VCF file into memory, so you need a lot of memory for large VCF files. During testing, I ran VCF files of up to 25 GB in size, which finished in ~20 minutes using ~155 GB of memory.
+**System requirements**: 
+- Currently, this scripts loads the whole VCF file into memory, so you need a lot of memory for large VCF files. During testing, I ran VCF files of up to 25 GB in size, which finished in ~20 minutes using ~155 GB of memory.
+- Program developed with Python v3.11.4. Likely compatible with multiple versions, but not yet tested.
+
+**Dependencies**:
+- argparse module
+- pandas module (v2.1.4)
+- collections module
+- numpy module (v1.26.1)
 
 **Notes**: 
 
@@ -44,11 +52,11 @@ header line. Subtract one and use that value for the `--skipRows` flag (see usag
 - Create a tab-delimited population file (.txt) with two columns: 1) Population and 2) Individual. This file serves to map your individuals to the three populations under consideration. Values in the Population column should be formatted with a single word followed by an underscore and number (e.g., blueRobin_1). The word (=the population name) serves to group populations and the number keeps track of the individuals in that population. Also, use the word to identify populations when running the program (e.g., `--popA blueRobin`)
 - Create a tab-delimited genomic window file (.bed) that specifies the windows over which you want to estimate U20, U50, and Q95. This file has no column headers and three columns with 1) chromosome names, 2) window start position, and 3) window end position. In order to get this genomics window file, I suggest the following steps:
     + create a genome file with two columns (no headers) containing 1) chromosome names and 2) their length in bases. The command below creates this genome file from the reference genome fasta index file (.fasta.fai): `awk -v OFS='\t' {'print $1,$2'} genome.fasta.fai > genome_file.txt`
-    + Use this genome file in conjuction with bedtools `makewindows` to create the genomic window file. Here are two examples of commands to make windows (the first produces non-overlapping 2MB windows and the second produces sliding 2MB windows with 100kb overlap): \
-    `bedtools makewindows -g genome_file.txt -w 2000000 > windows.bed` \
-    `bedtools makewindows -g genome_file.txt -w 2000000 -s 1900000 > windows.bed`
+    + Use this genome file in conjuction with bedtools `makewindows` to create the genomic window file. Here are two examples of commands to make windows (the first produces non-overlapping 10kb windows and the second produces sliding 10kb windows with 1kb overlap): \
+    `bedtools makewindows -g genome_file.txt -w 10000 > windows.bed` \
+    `bedtools makewindows -g genome_file.txt -w 10000 -s 9000 > windows.bed`
 
-- Move input files into same directory as allele_stats.py and run the program!
+- Move your input files into the same directory as allele_stats.py and run the program!
 
 ## Usage
 
