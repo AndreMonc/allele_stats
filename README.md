@@ -58,6 +58,8 @@ header line. Subtract one and use that value for the `--skipRows` flag (see usag
 
 ## Citation
 
-[![DOI](https://zenodo.org/badge/411024089.svg)](https://zenodo.org/badge/latestdoi/411024089)
+[![DOI](https://zenodo.org/badge/746977070.svg)](https://zenodo.org/doi/10.5281/zenodo.10553643)
 
-**Moncrieff, A.E.** 2024. Allele_stats.py: a program to calculate U20, U50, and Q95 statistics from VCF files. DOI:10.5281/zenodo.5532931
+
+
+**Moncrieff, A.E.** 2024. Allele_stats.py: a program to calculate U20, U50, and Q95 statistics from VCF files. DOI:10.5281/zenodo.10553644
