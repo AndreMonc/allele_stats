@@ -37,7 +37,7 @@ than w in panel A and equal to y in panel C" (Table 1 in Racimo et al. 2017). Cu
 **Notes**: 
 
 - This script filters out sites with >= 50% missingness in any of the three specified populations to help ensure data quality.
-- To properly use this program it is important to identify the ancestral allele (similar logic to ABBA-BABBA tests). Our best approximation of this ancestral allele is often the allele in a near outgroup. Thus, ideally, your reference genome is a species or population just outside the clades of interest. When this is the case, we can straightforwardly polarize the alleles of population A by fixing them to alternate state "1" and those of population C by fixing them to the ancestral state "0". Sites with the opposite polarization are not as informative since shared alleles between populations B and C may indicate shared ancestry more than adaptive introgression. 
+- To properly use this program it is important to identify the ancestral allele (similar logic to ABBA-BABA tests). Our best approximation of this ancestral allele is often the allele in a near outgroup. Thus, ideally, your reference genome is a species or population just outside the clades of interest. When this is the case, we can straightforwardly polarize the alleles of population A by fixing them to alternate state "1" and those of population C by fixing them to the ancestral state "0". Sites with the opposite polarization are not as informative since shared alleles between populations B and C may indicate shared ancestry more than adaptive introgression. 
 - Populations A and B are sister. Population C is sister to populations A + B. Reference is outgroup of populations A + B + C.
 
 
