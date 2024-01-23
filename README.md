@@ -7,12 +7,12 @@
 
 **Statistic definitions**: 
 
-- *U* statistics: "*U<sub>A,B,C</sub>*(*w,x,y*): Number of sites in which any allele is at a frequency lower than w in panel A, higher than x in panel B and equal to y in panel C" (Table 1 in Racimo et al. 2017). Currently, this script considers only w=1% and y=100% (as shown in Fig. 1 in Racimo et al. 2017). In practice, I fixed sites in panel A to the reference allele and sites in panel C to the alternate allele, ensuring that allele frequencies of w and y will meet requirements of the above definition. For *U20*, x=20 and for *U50*, x=50.
+- *U* statistics: "*U<sub>A,B,C</sub>*(*w,x,y*): Number of sites in which any allele is at a frequency lower than w in panel A, higher than x in panel B and equal to y in panel C" (Table 1 in Racimo et al. 2017). Currently, this script considers only w=1% and y=100% (as shown in Fig. 1 in Racimo et al. 2017). In practice, I fixed sites in panel A to the reference allele and sites in panel C to the alternate allele, ensuring that allele frequencies of w and y meet requirements of the above definition. For *U20*, x=20 and for *U50*, x=50.
 
 - *Q95* statistic:
 "*Q95<sub>A,B,C</sub>*(*w,y*): 95% quantile of the distribution of derived allele frequencies 
 in panel B, for sites where the derived allele is at a frequency lower 
-than w in panel A and equal to y in panel C" (Table 1 in Racimo et al. 2017). Currently, this script considers only w=1% and y=100% (as shown in Fig. 1 in Racimo et al. 2017). In practice, I fixed sites in panel A to the reference allele and sites in panel C to the alternate allele, ensuring that allele frequencies of w and y will meet requirements of the above definition.
+than w in panel A and equal to y in panel C" (Table 1 in Racimo et al. 2017). Currently, this script considers only w=1% and y=100% (as shown in Fig. 1 in Racimo et al. 2017). In practice, I fixed sites in panel A to the reference allele and sites in panel C to the alternate allele, ensuring that allele frequencies of w and y meet requirements of the above definition.
 
 **Input**: 
 - VCF file (.vcf)
