@@ -42,7 +42,7 @@ header line. Subtract one and use that value for the `--skipRows` flag (see usag
     `bedtools makewindows -g genome_file.txt -w 2000000 > windows.bed` \
     `bedtools makewindows -g genome_file.txt -w 2000000 -s 1900000 > windows.bed`
 
-- Run the program!
+- Move input files into same directory as allele_stats.py and run the program!
 
 ## Usage
 
