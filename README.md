@@ -61,8 +61,8 @@ header line. Subtract one and use that value for the `--skipRows` flag (see usag
 ## Usage
 
 `python allele_stats.py --vcfFile filename.vcf --skipRows n
---windowFile windows.bed --popKey popKey.txt --popA popA_name
---popB popB_name --popC popCname`
+--windowFile windows.bed --popKey popKey.txt --popA popAname
+--popB popBname --popC popCname`
 
 ## Command to run example files
 
