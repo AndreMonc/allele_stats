@@ -96,6 +96,15 @@ def pop_dict_maker(pop_df):
     return dictionary
 
 
+def rename_and_sort_df(vcf_df, pop_dict):
+    #rename and sort based on pop_dict
+    renamed_vcf = vcf_df.rename(columns=pop_dict)
+    cols = renamed_vcf.columns.tolist()
+    cols = cols[:9] + sorted(cols[9:]) # sort individuals but not other columns
+    renamed_vcf = renamed_vcf[cols]
+    return renamed_vcf
+
+
 def rows_to_list(vcf_df):
     list_of_rows = vcf_df.values.tolist()
     return list_of_rows
@@ -406,11 +415,7 @@ def main():
     popC_string = args.popC
     pop_dict = pop_dict_maker(pop_df) # make a dictionary of old (keys) and new 
     # (values) population names based on the popKey file
-    renamed_vcf_df2 = vcf_df.rename(columns=pop_dict) # rename dataframe headers
-    sorted_vcf_df3 = renamed_vcf_df2.reindex(sorted(renamed_vcf_df2.columns), 
-                                             axis=1) # sort the columns in 
-                                                     # dataframe by population
-    
+    sorted_vcf_df3 = rename_and_sort_df(vcf_df, pop_dict)
     list_of_rows = rows_to_list(sorted_vcf_df3) # convert each dataframe row 
     # into a list
     trimmed_list_of_rows = trim_lists(list_of_rows) # remove first nine elements 
