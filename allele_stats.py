@@ -96,15 +96,6 @@ def pop_dict_maker(pop_df):
     return dictionary
 
 
-def rename_and_sort_df(vcf_df, pop_dict):
-    #rename and sort based on pop_dict
-    renamed_vcf = vcf_df.rename(columns=pop_dict)
-    cols = renamed_vcf.columns.tolist()
-    cols = cols[:9] + sorted(cols[9:]) # sort individuals but not other columns
-    renamed_vcf = renamed_vcf[cols]
-    return renamed_vcf
-
-
 def rows_to_list(vcf_df):
     list_of_rows = vcf_df.values.tolist()
     return list_of_rows
@@ -330,6 +321,77 @@ def list_to_df(final_list_of_rows):
     return dataframe
 
 
+def alt_map(cleaned_vcf_df6, pop_df):
+    column_headers = (list(cleaned_vcf_df6.columns))
+    col_head_v1 = column_headers[9:] # remove VCF intro columns
+    pop_headers = col_head_v1[:-4] # remove site stat columns    
+    list_of_columns = []
+    for header in pop_headers:
+        col_list = cleaned_vcf_df6[header].values.tolist()
+        list_of_columns.append(col_list)
+    alleles_by_column = []
+    for column in list_of_columns:
+        column_list = []
+        for snp_data in column:
+            genotype = snp_data.split(':')[0]
+            allele1 = genotype.split('/')[0]
+            allele2 = genotype.split('/')[1]
+            column_list.append(allele1)
+            column_list.append(allele2)
+        alleles_by_column.append(column_list)
+    alt_count_list = []
+    ref_count_list = []
+    miss_count_list = []
+    alt_freq_list = []
+    ref_freq_list = []
+    miss_freq_list = []
+    for column in alleles_by_column:
+        counts = (Counter(column))
+        total_number_of_alleles = (len(column))
+        alternate_allele_count = counts['1']
+        ref_allele_count = counts['0']
+        missing_allele_count = counts['.']
+        alt_freq = round(alternate_allele_count/total_number_of_alleles, 3)
+        ref_freq = round(ref_allele_count/total_number_of_alleles, 3)
+        miss_freq = round(missing_allele_count/total_number_of_alleles, 3)
+        alt_count_list.append(alternate_allele_count)
+        ref_count_list.append(ref_allele_count)
+        miss_count_list.append(missing_allele_count)
+        alt_freq_list.append(alt_freq)
+        ref_freq_list.append(ref_freq)
+        miss_freq_list.append(miss_freq)
+    pop_col = pop_df['Population'].tolist()
+    ind_col = pop_df['Individual'].tolist()
+    lat_col = pop_df['Lat'].tolist()
+    long_col = pop_df['Long'].tolist()
+    ind_col_ordered = []
+    lat_col_ordered = []
+    long_col_ordered = []
+    for ind in pop_headers: 
+        for i in range(len(pop_col)):
+            if ind == pop_col[i]:
+                individual = ind_col[i]
+                latitude = lat_col[i]
+                longitude = long_col[i]
+                ind_col_ordered.append(individual)
+                lat_col_ordered.append(latitude)
+                long_col_ordered.append(longitude)            
+            else:
+                pass
+    map_df = pandas.DataFrame()
+    map_df['population'] = pop_headers
+    map_df['individual'] = ind_col_ordered
+    map_df['alternate_allele_count'] = alt_count_list
+    map_df['reference_allele_count'] = ref_count_list
+    map_df['missing_allele_count'] = miss_count_list
+    map_df['alternate_allele_frequency'] = alt_freq_list
+    map_df['reference_allele_frequency'] = ref_freq_list
+    map_df['missing_allele_frequency'] = miss_freq_list
+    map_df['latitude'] = lat_col_ordered
+    map_df['longitude'] = long_col_ordered
+    return map_df
+
+
 def main():
     #create args object
     args = parser()    
@@ -344,7 +406,11 @@ def main():
     popC_string = args.popC
     pop_dict = pop_dict_maker(pop_df) # make a dictionary of old (keys) and new 
     # (values) population names based on the popKey file
-    sorted_vcf_df3 = rename_and_sort_df(vcf_df, pop_dict)
+    renamed_vcf_df2 = vcf_df.rename(columns=pop_dict) # rename dataframe headers
+    sorted_vcf_df3 = renamed_vcf_df2.reindex(sorted(renamed_vcf_df2.columns), 
+                                             axis=1) # sort the columns in 
+                                                     # dataframe by population
+    
     list_of_rows = rows_to_list(sorted_vcf_df3) # convert each dataframe row 
     # into a list
     trimmed_list_of_rows = trim_lists(list_of_rows) # remove first nine elements 
@@ -384,11 +450,15 @@ def main():
                                                      rows_with_final_stats)
     allele_stats_by_window_df = list_to_df(final_list_of_rows)
     print("\n"+"RUNNING: saving 2nd output file -> allele_stats_by_window.csv")
-    
     allele_stats_by_window_df.to_csv('allele_stats_by_window.csv', sep=',', 
                                      index=False)
     print("Preview of allele_stats_by_window.csv:")
     print(allele_stats_by_window_df)
+    map_df = alt_map(cleaned_vcf_df6, pop_df)
+    print("\n"+"RUNNING: saving 3rd output file -> allele_stats_map.csv")
+    map_df.to_csv('allele_stats_map.csv', sep=',', index=False)
+    print("Preview of allele_stats_map.csv:")
+    print(map_df)
     print("\n"+"DONE"+"\n")
 
 if __name__ == '__main__':
