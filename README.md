@@ -24,7 +24,9 @@ than w in panel A and equal to y in panel C" (Table 1 in Racimo et al. 2017). Cu
 
 - File 2 (*allele_stats_by_window.csv*) is organized by the windows specified in the genomic window file. Each window includes the calculated value for U20, U50, Q95, and the number of informative sites in the window.
 
-- File 3 (*allele_stats_map.csv*) includes counts and frequencies, by individual, of the alternate, reference, and missing alleles for the sites listed in File 1. Plotting the allele frequency output in File 3 as pie charts on a map provides a nice visual for the geographic distribution of alleles at genomic sites polarized between populations A and C.
+- File 3 (*all_sites_map.csv*) includes counts and frequencies, by individual, of the alternate, reference, and missing alleles for the sites listed in File 1. Plotting the allele frequency outputs in File 3 on a map provides a nice visual for the geographic distribution of alleles at genomic sites polarized between populations A and C.
+
+- File 4 (*alternate_sites_map.csv*) includes counts and frequencies, by individual, of the alternate, reference, and missing alleles for the sites listed in File 1 *that include at least 1 alternate allele in population B*. Plotting the allele frequency outputs in File 3 on a map provides a nice visual for the geographic distribution of alleles at genomic sites polarized between populations A and C and potentially subject to introgression from population C.
 
 **System requirements**: 
 - Currently, this script loads the whole VCF file into memory, so you need a lot of memory for large VCF files. So far, the largest VCF file I have run was 25 GB (with 28 million SNPs). This file finished running in ~25 minutes using ~157 GB of memory on one LSU HPC [SuperMic](https://www.hpc.lsu.edu/docs/guides.php?system=SuperMIC) Big Memory compute node. If users want to reduce memory requirements, they can divide VCF files into smaller files (say, by chromosome) and process them that way.
