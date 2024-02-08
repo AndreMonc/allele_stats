@@ -29,6 +29,7 @@ Copyright 2024 Andre E. Moncrieff. All rights reserved.
 """
 
 import argparse
+from distutils.command import clean
 import pandas
 from collections import Counter
 import numpy
@@ -330,13 +331,21 @@ def list_to_df(final_list_of_rows):
     return dataframe
 
 
-def alt_map(cleaned_vcf_df6, pop_df):
-    column_headers = (list(cleaned_vcf_df6.columns))
-    col_head_v1 = column_headers[9:] # remove VCF intro columns
+def just_alt_sites(cleaned_vcf_df6):
+    sorted_df = cleaned_vcf_df6.sort_values(by=['popB_alt_allele_count'], 
+                                            ascending=False)
+    final_df = sorted_df[sorted_df.popB_alt_allele_count != 0] # only sites
+    # with evidence of introgression (at least one alternate allele)
+    return final_df
+
+
+def alt_map(sites, pop_df):
+    column_headers = (list(sites.columns))
+    col_head_v1 = column_headers[9:] # remove intro columns
     pop_headers = col_head_v1[:-4] # remove site stat columns    
     list_of_columns = []
     for header in pop_headers:
-        col_list = cleaned_vcf_df6[header].values.tolist()
+        col_list = sites[header].values.tolist()
         list_of_columns.append(col_list)
     alleles_by_column = []
     for column in list_of_columns:
@@ -354,6 +363,7 @@ def alt_map(cleaned_vcf_df6, pop_df):
     alt_freq_list = []
     ref_freq_list = []
     miss_freq_list = []
+    alt_perc_list = []
     for column in alleles_by_column:
         counts = (Counter(column))
         total_number_of_alleles = (len(column))
@@ -363,12 +373,18 @@ def alt_map(cleaned_vcf_df6, pop_df):
         alt_freq = round(alternate_allele_count/total_number_of_alleles, 3)
         ref_freq = round(ref_allele_count/total_number_of_alleles, 3)
         miss_freq = round(missing_allele_count/total_number_of_alleles, 3)
+        alt_perc = round((alternate_allele_count/(
+            alternate_allele_count+ref_allele_count)*100), 1) # this line
+        # will give an error (division by zero) if you have only missing data
+        # in a given indiviudal for polarized sites. Remove this individual 
+        # and rerun program.
         alt_count_list.append(alternate_allele_count)
         ref_count_list.append(ref_allele_count)
         miss_count_list.append(missing_allele_count)
         alt_freq_list.append(alt_freq)
         ref_freq_list.append(ref_freq)
         miss_freq_list.append(miss_freq)
+        alt_perc_list.append(alt_perc)
     pop_col = pop_df['Population'].tolist()
     ind_col = pop_df['Individual'].tolist()
     lat_col = pop_df['Lat'].tolist()
@@ -396,6 +412,7 @@ def alt_map(cleaned_vcf_df6, pop_df):
     map_df['alternate_allele_frequency'] = alt_freq_list
     map_df['reference_allele_frequency'] = ref_freq_list
     map_df['missing_allele_frequency'] = miss_freq_list
+    map_df['alternate_percentage_of_non_missing_alleles'] = alt_perc_list
     map_df['latitude'] = lat_col_ordered
     map_df['longitude'] = long_col_ordered
     return map_df
@@ -432,6 +449,7 @@ def main():
                                                  row_indicator_list)
     filtered_vcf_df5 = filter_dataframe(indicator_column_vcf_df4)
     cleaned_vcf_df6 = delete_column(filtered_vcf_df5)
+
     filtered_list_of_rows = rows_to_list(cleaned_vcf_df6)
     filt_trimmed_list_of_rows = trim_lists(filtered_list_of_rows)
     final_list_of_genotypes = genotype_list(filt_trimmed_list_of_rows)
@@ -445,6 +463,7 @@ def main():
     cleaned_vcf_df6['popB_missing_allele_count'] = popB_missing_allele_count
     cleaned_vcf_df6['popB_alt_allele_freq'] = popB_alt_allele_freq
     cleaned_vcf_df6['popB_alt_allele_adj_freq'] = popB_alt_allele_adj_freq
+    
     print("\n"+"RUNNING: saving 1st output file -> allele_stats_by_site.csv")
     cleaned_vcf_df6.to_csv('allele_stats_by_site.csv', sep=',', index=False)
     print("Preview of allele_stats_by_site.csv:")
@@ -460,10 +479,19 @@ def main():
     print("Preview of allele_stats_by_window.csv:")
     print(allele_stats_by_window_df)
     map_df = alt_map(cleaned_vcf_df6, pop_df)
-    print("\n"+"RUNNING: saving 3rd output file -> allele_stats_map.csv")
-    map_df.to_csv('allele_stats_map.csv', sep=',', index=False)
-    print("Preview of allele_stats_map.csv:")
+    print("\n"+"RUNNING: saving 3rd output file -> all_sites_map.csv")
+    map_df.to_csv('all_sites_map.csv', sep=',', index=False)
+    print("Preview of all_sites_map.csv:")
     print(map_df)
+
+    just_alt_sites_df = just_alt_sites(cleaned_vcf_df6)
+    only_alt_map_df = alt_map(just_alt_sites_df, pop_df)
+
+    print("\n"+"RUNNING: saving 4th output file -> alternate_sites_map.csv")
+    only_alt_map_df.to_csv('alternate_sites_map.csv', sep=',', index=False)
+    print("Preview of alternate_sites_map.csv:")
+    print(only_alt_map_df)
+
     print("\n"+"DONE"+"\n")
 
 if __name__ == '__main__':

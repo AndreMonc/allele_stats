@@ -1,5 +1,5 @@
 chromosome,start,end,U20,U50,Q95,informative_sites
-Pseudochr1,0,2000000,4,0,0.49,6
+Pseudochr1,0,2000000,4,0,0.492,5
 Pseudochr1,2000000,4000000,0,0,0,0
 Pseudochr1,4000000,6000000,0,0,0,0
 Pseudochr1,6000000,8000000,0,0,0,0
