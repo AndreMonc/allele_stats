@@ -50,7 +50,7 @@ than w in panel A and equal to y in panel C" (Table 1 in Racimo et al. 2017). Cu
 - Check out the example files in this repository
 - Double check that your VCF file has the expected nine intro columns (from 'CHROM' through 
 'FORMAT'). If you are missing the FORMAT column, add it so that the column indexing is not thrown off.
-- Double check that missing genotypes are coded "./." (note that GATK outputs VCFs with [different coding for missing data](https://gatk.broadinstitute.org/hc/en-us/articles/6012243429531-GenotypeGVCFs-and-the-death-of-the-dot)).
+- Double check that missing genotypes are coded "./." (note that GATK now outputs VCFs with [different coding for missing data](https://gatk.broadinstitute.org/hc/en-us/articles/6012243429531-GenotypeGVCFs-and-the-death-of-the-dot)).
 - Filter VCF to include only biallelic SNPs. Missing data is ok (see note above).
 - Use command `grep -n "#CHROM" filename.vcf` to identify the line number of the VCF file 
 header line. Subtract one and use that value for the `--skipRows` flag (see usage below).
