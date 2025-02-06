@@ -161,8 +161,16 @@ def polarize_popA_popC(list_of_genotypes, slices):
     popB_second_index = slices[3] 
     popC_first_index = slices[4]
     popC_second_index = slices[5]
+    new_list_of_genotypes = [] # list of genotypes without the pipes 
+    # (so that splitting on "/") works properly
+    for row in list_of_genotypes:
+        new_row = []
+        for gt in row:
+            new_gt = gt.replace("|", "/")
+            new_row.append(new_gt)
+        new_list_of_genotypes.append(new_row)
     row_indicator = []
-    for item in list_of_genotypes:
+    for item in new_list_of_genotypes:
         #each item is a list representing an entire row of genotypes from all 
         #individuals in the dataset
         popA_genotypes = item[popA_first_index:popA_second_index]
