@@ -244,7 +244,15 @@ def popB_allele_stats(final_list_of_genotypes, slices):
     popB_alt_allele_adj_freq = []
     popB_first_index = slices[2]
     popB_second_index = slices[3]
+    new_list_of_genotypes = [] # list of genotypes without the pipes 
+    # (so that splitting on "/") works properly
     for row in final_list_of_genotypes:
+        new_row = []
+        for gt in row:
+            new_gt = gt.replace("|", "/")
+            new_row.append(new_gt)
+        new_list_of_genotypes.append(new_row)
+    for row in new_list_of_genotypes:
         popB_genotypes = row[popB_first_index:popB_second_index]
         popB_indiv_alleles = []
         for genotype in popB_genotypes:
