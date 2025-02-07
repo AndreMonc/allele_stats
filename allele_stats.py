@@ -367,7 +367,8 @@ def alt_map(sites, pop_df):
     for column in list_of_columns:
         column_list = []
         for snp_data in column:
-            genotype = snp_data.split(':')[0]
+            raw_gt = snp_data.split(':')[0]
+            genotype = raw_gt.replace("|", "/")
             allele1 = genotype.split('/')[0]
             allele2 = genotype.split('/')[1]
             column_list.append(allele1)
